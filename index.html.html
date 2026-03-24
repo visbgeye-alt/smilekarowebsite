@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You, Chori 💖</title>
+    <!-- Google Fonts for elegant typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- GLOBAL STYLES & RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Prevents scrollbars during animations */
+            color: #fff;
+            /* Premium Animated Gradient Background */
+            background: linear-gradient(-45deg, #ff9a9e, #fecfef, #a18cd1, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- BACKGROUND PARTICLES --- */
+        #particles-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Let clicks pass through */
+            z-index: 0;
+        }
+
+        .floating-heart {
+            position: absolute;
+            bottom: -10vh;
+            color: rgba(255, 255, 255, 0.4);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) scale(1.5) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- SCREENS --- */
+        .screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+            z-index: 10;
+        }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* --- GLASSMORPHISM CARDS --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            max-width: 90%;
+            width: 500px;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            min-height: 100px; /* Space for typewriter */
+        }
+
+        .custom-message {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffe6e6;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 2s ease;
+            margin-top: 15px;
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            outline: none;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .music-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            z-index: 20;
+            transition: background 0.3s, transform 0.3s;
+        }
+        
+        .music-toggle:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+        }
+
+        /* --- SURPRISE POPUP --- */
+        #popup-modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(255, 255, 255, 0.9);
+            color: #d63384;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #popup-modal.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .glowing-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #ff9a9e, 0 0 20px #ff9a9e;
+        }
+
+        .ending-line {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        /* --- EXPLOSION ANIMATION --- */
+        .explosion-particle {
+            position: absolute;
+            font-size: 1.5rem;
+            pointer-events: none;
+            z-index: 99;
+            animation: popOut 1s ease-out forwards;
+        }
+
+        @keyframes popOut {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            p { font-size: 1rem; }
+            .glass-card { padding: 30px 20px; }
+            .glowing-text { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Soft, aesthetic background music (Pixabay Royalty Free) -->
+    <audio id="bg-music" loop>
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/16/audio_9979d38c64.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Background Particles -->
+    <div id="particles-container"></div>
+
+    <!-- WELCOME SCREEN -->
+    <div id="welcome-screen" class="screen">
+        <div class="glass-card">
+            <h1>Hello, Chori ✨</h1>
+            <p style="min-height: auto; margin-bottom: 30px;">I have a little surprise for you...</p>
+            <button class="btn" onclick="startExperience()">Tap to Start <i class="fa-solid fa-heart"></i></button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT SCREEN -->
+    <div id="main-screen" class="screen hidden">
+        <button class="music-toggle" onclick="toggleMusic()" id="music-btn">
+            <i class="fa-solid fa-pause"></i>
+        </button>
+
+        <div class="glass-card">
+            <h1>For You, Chori</h1>
+            <p id="typewriter-text"></p>
+            
+            <div id="custom-msg" class="custom-message">
+                Ap bas smile karo😊😊😊ye mausi nhi .
+            </div>
+
+            <button class="btn hidden" id="surprise-btn" onclick="triggerSurprise(event)" style="margin-top: 30px;">
+                Click for a Surprise 🎁
+            </button>
+        </div>
+    </div>
+
+    <!-- SURPRISE POPUP MODAL -->
+    <div id="popup-modal">
+        <div class="glowing-text">You are special 💖</div>
+        <div class="ending-line">Keep smiling always 😊</div>
+        <button class="btn" style="color: #d63384; border-color: #d63384; margin-top: 20px;" onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const heartfeltMessage = "I wanted to take a moment to tell you how truly amazing you are. Every time you smile, the world becomes a little brighter. Your presence brings so much warmth and joy. Never forget how incredibly important, valued, and beautiful you are.";
+        
+        // Elements
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const mainScreen = document.getElementById('main-screen');
+        const bgMusic = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('music-btn');
+        const typeContainer = document.getElementById('typewriter-text');
+        const customMsg = document.getElementById('custom-msg');
+        const surpriseBtn = document.getElementById('surprise-btn');
+        const popupModal = document.getElementById('popup-modal');
+
+        // --- BACKGROUND FLOATING HEARTS ---
+        function createFloatingHearts() {
+            const container = document.getElementById('particles-container');
+            const hearts = ['🤍', '💖', '✨', '🌸'];
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                heart.style.fontSize = (Math.random() * 1.5 + 0.5) + 'rem';
+                container.appendChild(heart);
+                
+                // Remove element after animation to prevent lag
+                setTimeout(() => { heart.remove(); }, 10000);
+            }, 400); // Generates a new heart every 400ms
+        }
+
+        // --- START EXPERIENCE ---
+        function startExperience() {
+            // Play music (requires user interaction to start)
+            bgMusic.volume = 0.5;
+            bgMusic.play();
+
+            // Transition Screens
+            welcomeScreen.classList.add('hidden');
+            setTimeout(() => {
+                mainScreen.classList.remove('hidden');
+                startTypewriter();
+            }, 1000);
+        }
+
+        // --- MUSIC TOGGLE ---
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            } else {
+                bgMusic.pause();
+                musicBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+            }
+        }
+
+        // --- TYPEWRITER EFFECT ---
+        let i = 0;
+        function startTypewriter() {
+            if (i < heartfeltMessage.length) {
+                typeContainer.innerHTML += heartfeltMessage.charAt(i);
+                i++;
+                setTimeout(startTypewriter, 50); // Typing speed
+            } else {
+                // When typing is done, show the custom message and surprise button
+                setTimeout(() => {
+                    customMsg.style.opacity = 1;
+                }, 500);
+                setTimeout(() => {
+                    surpriseBtn.classList.remove('hidden');
+                    surpriseBtn.style.opacity = 0;
+                    setTimeout(() => { surpriseBtn.style.opacity = 1; surpriseBtn.style.transition = 'opacity 1s'; }, 50);
+                }, 2000);
+            }
+        }
+
+        // --- EXPLOSION & SURPRISE ---
+        function triggerSurprise(e) {
+            // Button click coordinates
+            const x = e.clientX;
+            const y = e.clientY;
+
+            // Generate particles
+            for (let j = 0; j < 40; j++) {
+                createExplosionParticle(x, y);
+            }
+
+            // Show Popup
+            setTimeout(() => {
+                popupModal.classList.add('show');
+            }, 600);
+        }
+
+        function createExplosionParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.classList.add('explosion-particle');
+            particle.innerText =['💖', '🎉', '✨', '🌸'][Math.floor(Math.random() * 4)];
+            
+            // Set start position
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+
+            // Calculate random movement direction
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 100 + Math.random() * 200; // Distance of explosion
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            particle.style.setProperty('--tx', `${tx}px`);
+            particle.style.setProperty('--ty', `${ty}px`);
+
+            document.body.appendChild(particle);
+
+            // Cleanup
+            setTimeout(() => { particle.remove(); }, 1000);
+        }
+
+        function closePopup() {
+            popupModal.classList.remove('show');
+        }
+
+        // Initialize background animations on load
+        window.onload = createFloatingHearts;
+    </script>
+</body>
+</html>
